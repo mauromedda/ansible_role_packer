@@ -1,0 +1,26 @@
+---
+# tasks file for ansible_role_packer
+
+- name: "PRELIM | Check the current packer version"
+  stat:
+    path: '/opt/hashicorp/packer/{{ packer_version }}'
+  register: packer_current
+  changed_when: false
+  check_mode: no
+  tags:
+    - install
+    - purge_old
+    - cleanup
+    - packer
+
+- name: "PRELIM | Get current version symlink"
+  stat:
+    path: '/usr/bin/packer'
+  register: current_version
+  changed_when: false
+  check_mode: no
+  tags:
+    - install
+    - purge_old
+    - cleanup
+    - packer

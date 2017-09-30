@@ -1,0 +1,60 @@
+---
+# tasks file for ansible_role_packer
+
+- name: "Terraform | Create a version specific directory"
+  file:
+    path: '{{ packer_base_install_dir }}/{{ packer_version }}'
+    state: directory
+    mode: 0755
+  tags:
+    - install
+    - create_dir
+    - packer
+
+- name: "Terraform | Check if packer_install_path exists"
+  stat:
+    path: '{{ packer_base_install_dir }}/{{ packer_version }}'
+  check_mode: false
+  register: packer_install_path_st
+  tags:
+    - install
+    - create_dir
+    - packer
+
+- name: "Terraform | Unarchive Terraform"
+  unarchive:
+    remote_src: true
+    src: '{{ packer_repo_url }}'
+    dest: '{{ packer_base_install_dir }}/{{ packer_version }}'
+    creates: '{{ packer_base_install_dir }}/{{ packer_version }}/packer'
+    mode: 0555
+  when: packer_install_path_st.stat.exists and packer_install_path_st.stat.isdir
+  register: packer_unarchive
+  tags:
+    - install
+    - download
+    - unarchive
+    - packer
+
+- name: "Terraform | Link the current packer version"
+  file:
+    src: '{{ packer_base_install_dir }}/{{ packer_version }}/packer'
+    dest: '{{ packer_bin }}'
+    state: link
+  when: packer_unarchive.changed == True
+  register: inst_current_version
+  tags:
+    - install
+    - link
+    - skip_ansible_lint
+    - packer
+
+- name: "Terraform | Clean-up installation files"
+  file:
+    path: '{{ packer_dist_file }}'
+    state: absent
+  when: packer_cleanup
+  tags:
+    - install
+    - cleanup
+    - packer

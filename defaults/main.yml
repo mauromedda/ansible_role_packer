@@ -1,0 +1,10 @@
+---
+# defaults file for ansible_role_packer
+
+packer_version: 1.1.0
+packer_dist_file: "packer_{{ packer_version }}_linux_amd64.zip"
+packer_repo_url: "https://releases.hashicorp.com/packer/{{packer_version}}/{{ packer_dist_file }}"
+packer_base_install_dir: /opt/hashicorp/packer
+packer_bin: /usr/bin/packer
+packer_purge_old: true
+packer_cleanup: true
