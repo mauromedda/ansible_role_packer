@@ -1,5 +1,5 @@
 ansible_role_packer
-======================
+===================
 
 This is a simple ansible role to install packer into a RedHat-like 7+ box.
 
